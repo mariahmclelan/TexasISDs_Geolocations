@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>School District Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 600px; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([31.9686, -99.9018], 6);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  fetch('resources/Current_Districts_2023.geojson')
+    .then(response => response.json())
+    .then(data => {
+      // Create a GeoJSON layer for school districts and add it to the map
+      L.geoJSON(data, {
+        style: {
+          fillColor: 'transparent',
+          color: 'blue',
+          weight: 2
+        }
+      }).addTo(map);
+    })
+    .catch(error => console.error('Error loading GeoJSON:', error));
+</script>
+
+</body>
+</html>
