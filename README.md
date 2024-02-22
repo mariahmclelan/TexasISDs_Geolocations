@@ -9,4 +9,6 @@ Day 1 (Next Class)
 
 ● Finding inspiration
 
-● “Sketching” your ideal visuals ● Creating a 1-page proposal
+● “Sketching” your ideal visuals 
+
+● Creating a 1-page proposal
