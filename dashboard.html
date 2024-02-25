@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>School District Dashboard</title>
+  <!-- Include Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>School District Dashboard</h1>
+
+  <canvas id="revenueChart" width="400" height="200"></canvas>
+  <canvas id="studentCountChart" width="400" height="200"></canvas>
+  <canvas id="satScoresChart" width="400" height="200"></canvas>
+  <canvas id="actScoresChart" width="400" height="200"></canvas>
+
+  <script>
+
+    // Load JSON data
+    fetch('resources/scores_finances.json')
+      .then(response => response.json())
+      .then(data => {
+        const districts = data.map(entry => entry['District Name']);
+        const totalOperatingRevenue = data.map(entry => parseFloat(entry['Total Operating Revenue']));
+        const studentCount = data.map(entry => parseInt(entry['Student Count']));
+        const satTotal = data.map(entry => parseInt(entry['SAT Total']));
+        const actComposite = data.map(entry => parseFloat(entry['ACT Compos']));
+
+        // Chart 1: Total Operating Revenue
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+          type: 'bar',
+          data: {
+            labels: districts,
+            datasets: [{
+              label: 'Total Operating Revenue',
+              data: totalOperatingRevenue,
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        // Chart 2: Student Count
+        const studentCountCtx = document.getElementById('studentCountChart').getContext('2d');
+        new Chart(studentCountCtx, {
+          type: 'line',
+          data: {
+            labels: districts,
+            datasets: [{
+              label: 'Student Count',
+              data: studentCount,
+              fill: false,
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        // Chart 3: SAT Total Scores
+        const satScoresCtx = document.getElementById('satScoresChart').getContext('2d');
+        new Chart(satScoresCtx, {
+          type: 'bar',
+          data: {
+            labels: districts,
+            datasets: [{
+              label: 'SAT Total Scores',
+              data: satTotal,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        // Chart 4: ACT Composite Scores
+        const actScoresCtx = document.getElementById('actScoresChart').getContext('2d');
+        new Chart(actScoresCtx, {
+          type: 'bar',
+          data: {
+            labels: districts,
+            datasets: [{
+              label: 'ACT Composite Scores',
+              data: actComposite,
+              backgroundColor: 'rgba(255, 206, 86, 0.2)',
+              borderColor: 'rgba(255, 206, 86, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      })
+      .catch(error => console.error('Error loading JSON data:', error));
+  </script>
+</body>
+</html>
+
+
