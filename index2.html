@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>School District Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    /* Make the map container fill the entire screen */
+    html, body, #map { height: 100%; margin: 0; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([31.9686, -99.9018], 6);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // var buildingIcon = L.icon({
+  //   iconUrl: 'school.png', // Path to the building icon image
+  //   iconSize: [32, 32], // Size of the icon
+  //   iconAnchor: [16, 32], // Anchor point of the icon
+  // //   popupAnchor: [0, -32] // Anchor point for the popup
+  // });
+
+  var colorMap = {
+    1: 'red',
+    2: 'blue',
+    3: 'green',
+    4: 'orange',
+    5: 'pink',
+    6: 'yellow',
+    7: 'purple',
+    // 
+  };
+
+
+
+  // Load the GeoJSON data for school districts
+  fetch('resources/Current_Districts_2023.geojson')
+    .then(response => response.json())
+    .then(districtsData => {
+      // Create a GeoJSON layer for school districts and add it to the map
+      L.geoJSON(districtsData, {
+        style: function(feature) {
+          var colorValue = parseInt(feature.properties.COLOR); // Convert color value to integer
+          var fillColor = colorMap[colorValue] || 'gray'; // Get color from colorMap, default to gray if not found
+          return {
+            fillColor: fillColor, // Use mapped color
+            color: 'black',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.5
+          };
+        },
+        onEachFeature: function(feature, layer) {
+          // Bind popup with district name and color to each district
+          layer.bindPopup('<b>District Name: </b> ' + feature.properties.NAME + '<br><b>Color: </b>' + feature.properties.COLOR); // Display district name and color
+        }
+      }).addTo(map);
+    })
+  
+  // Load the district data and create markers
+  fetch('resources/finance_scores_coordinates.json').then(response => response.json())
+    .then(districtData => {
+      districtData.forEach(district => {
+        var popupContent = `
+          <b>District Name:</b> ${district.District_Name}<br>
+          <b>Total Operating Revenue:</b> $${district.Total_Operating_Revenue}<br>
+          <b>Student Count:</b> ${district.Student_Count}
+        `;
+
+        var marker = L.marker([parseFloat(district.Latitude), parseFloat(district.Longitude)]);
+        marker.bindPopup(popupContent); // Display district name, total operating revenue, and student count
+        marker.addTo(map);
+      });
+    })
+    .catch(error => console.error('Error loading district data:', error));
+</script>
+</body>
+</html>
