@@ -22,47 +22,55 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
-  // Mapping of numerical values to colors
-  var colorMap = {
-    1: 'red',
-    2: 'blue',
-    3: 'green',
-    4: 'orange',
-    5: 'pink',
-    6: 'yellow',
-    7: 'purple',
-    // 
-  };
+  // Load the GeoJSON data for districts and schools
+  Promise.all([
+    fetch('resources/Current_Districts_2023.geojson').then(response => response.json()),
+    fetch('resources/Schools_2022_to_2023.geojson').then(response => response.json())
+  ]).then(data => {
+    var districtsData = data[0];
+    var schoolsData = data[1];
 
-  // Load the GeoJSON data for school districts
-  fetch('resources/Current_Districts_2023.geojson')
-    .then(response => response.json())
-    .then(districtsData => {
-      // Create a GeoJSON layer for school districts and add it to the map
-      L.geoJSON(districtsData, {
-        style: function(feature) {
-          var colorValue = parseInt(feature.properties.COLOR); // Convert color value to integer
-          var fillColor = colorMap[colorValue] || 'gray'; // Get color from colorMap, default to gray if not found
-          return {
-            fillColor: fillColor, // Use mapped color
-            color: 'black',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.5
-          };
-        },
-        onEachFeature: function(feature, layer) {
-          // Bind popup with district name and color to each district
-          layer.bindPopup('<b>District Name: </b> ' + feature.properties.NAME + '<br><b>Color: </b>' + feature.properties.COLOR); // Display district name and color
-        }
-      }).addTo(map);
-    })
-    .catch(error => console.error('Error loading district data:', error));
+    // Create a GeoJSON layer for districts and add it to the map
+    L.geoJSON(districtsData, {
+      style: function(feature) {
+        return {
+          color: 'black',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0
+        };
+      },
+      onEachFeature: function(feature, layer) {
+        // Bind popup with district name to each district
+        layer.bindPopup('<b>District Name: </b>' + feature.properties.NAME);
+      }
+    }).addTo(map);
+
+    // Create a GeoJSON layer for schools and add it to the map
+    L.geoJSON(schoolsData, {
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 8,
+          fillColor: 'blue',
+          color: '#000',
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        });
+      },
+      onEachFeature: function(feature, layer) {
+        // Bind popup with school information including district name
+        layer.bindPopup('<b>District Name: </b>' + feature.properties.USER_District_Name + 
+                        '<br><b>School Name: </b>' + feature.properties.USER_School_Name + 
+                        '<br><b>Address: </b>' + feature.properties.USER_School_Site_Street_Address + 
+                        '<br><b>Grades: </b>' + feature.properties.USER_Grade_Range + 
+                        '<br><b>Student count: </b>' + feature.properties.USER_School_Enrollment_as_of_Oc);
+      }
+    }).addTo(map);
+  }).catch(error => console.error('Error loading data:', error));
 </script>
 
 </body>
 </html>
-
-
 
 
