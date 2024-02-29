@@ -1,35 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>School District Map</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <style>
-        /* Make the map container fill the entire screen */
-        html, body, #map { height: 100%; margin: 0; }
-        .legend {
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-        .legend-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .legend-item {
-            margin-bottom: 5px;
-        }
-        .legend-color {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>School District Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    /* Make the map container fill the entire screen */
+    html, body, #map { height: 100%; margin: 0; }
+  </style>
 </head>
 <body>
 
@@ -37,135 +16,139 @@
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-    // Define a function to determine marker size based on total operating revenue
-    function getMarkerSize(revenue) {
-        if (revenue < 5000000) {
-            return 5;
-        } else if (revenue < 10000000) {
-            return 10;
-        } else if (revenue < 50000000) {
-            return 15;
-        } else if (revenue < 100000000) {
-            return 20;
-        } else if (revenue < 500000000) {
-            return 25;
-        } else {
-            return 30;
+  var map = L.map('map').setView([31.9686, -99.9018], 6);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // Create layer groups for districts, schools, and financial data
+  var districtsLayer = L.layerGroup();
+  var schoolsLayer = L.layerGroup();
+  var financeLayer = L.layerGroup();
+
+  // Load the GeoJSON data for districts and add it to the districts layer group
+  fetch('resources/Current_Districts_2023.geojson')
+    .then(response => response.json())
+    .then(districtsData => {
+      L.geoJSON(districtsData, {
+        style: function(feature) {
+          return {
+            color: 'black',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0
+          };
+        },
+        onEachFeature: function(feature, layer) {
+          layer.bindPopup('<b>District Name: </b>' + feature.properties.NAME);
         }
-    }
+      }).addTo(districtsLayer);
+    })
+    .catch(error => console.error('Error loading districts data:', error));
 
-    // Define a function to determine marker color based on student count
-    function getMarkerColor(studentCount) {
-        if (studentCount >= 2275) {
-            return 'red';
-        } else if (studentCount >= 1315) {
-            return 'purple';
-        } else if (studentCount >= 545) {
-            return 'blue';
-        } else if (studentCount >= 254) {
-            return 'yellow';
-        } else if (studentCount >= 105) {
-            return 'orange';
-        } else {
-            return 'green';
+  // Load the GeoJSON data for schools and add it to the schools layer group
+  fetch('resources/Schools_2022_to_2023.geojson')
+    .then(response => response.json())
+    .then(schoolsData => {
+      L.geoJSON(schoolsData, {
+        pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, {
+            radius: 8,
+            fillColor: 'blue',
+            color: '#000',
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+          });
+        },
+        onEachFeature: function(feature, layer) {
+          layer.bindPopup('<b>District Name: </b>' + feature.properties.USER_District_Name + 
+                          '<br><b>School Name: </b>' + feature.properties.USER_School_Name + 
+                          '<br><b>Address: </b>' + feature.properties.USER_School_Site_Street_Address + 
+                          '<br><b>Grades: </b>' + feature.properties.USER_Grade_Range + 
+                          '<br><b>Student count: </b>' + feature.properties.USER_School_Enrollment_as_of_Oc);
         }
+      }).addTo(schoolsLayer);
+    })
+    .catch(error => console.error('Error loading schools data:', error));
+
+  // Load the financial data and add it to the finance layer group
+  fetch('resources/finance_coordinates.json')
+    .then(response => response.json())
+    .then(financeData => {
+      financeData.forEach(school => {
+        var size = getMarkerSize(school.Total_Operating_Revenue);
+        var color = getMarkerColor(school.Student_Count);
+
+        var popupContent = `
+          <div>
+            <h3>${school.District_Name}</h3>
+            <p>Total Operating Revenue: $${school.Total_Operating_Revenue.toLocaleString()}</p>
+            <p>Student Count: ${school.Student_Count.toLocaleString()}</p>
+          </div>
+        `;
+
+        L.circleMarker([school.Latitude, school.Longitude], {
+          radius: size,
+          fillColor: color,
+          color: '#000',
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.7
+        }).bindPopup(popupContent).addTo(financeLayer);
+      });
+    })
+    .catch(error => console.error('Error loading financial data:', error));
+
+  // Add layers to the map and create layer controls
+  var baseLayers = {
+    "Map": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    })
+  };
+
+  var overlays = {
+    "Districts": districtsLayer,
+    "Schools": schoolsLayer,
+    "Financial Data": financeLayer
+  };
+
+  L.control.layers(baseLayers, overlays).addTo(map);
+
+  // Define a function to determine marker size based on total operating revenue
+  function getMarkerSize(revenue) {
+    if (revenue < 5000000) {
+      return 5;
+    } else if (revenue < 10000000) {
+      return 10;
+    } else if (revenue < 50000000) {
+      return 15;
+    } else if (revenue < 100000000) {
+      return 20;
+    } else if (revenue < 500000000) {
+      return 25;
+    } else {
+      return 30;
     }
+  }
 
-    var map = L.map('map').setView([31.9686, -99.9018], 6);
-
-    // Define base layers
-    var baseLayers = {
-        "Street Map": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }),
-        "Terrain Map": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.opentopomap.org">OpenTopoMap</a> contributors'
-        })
-    };
-
-    // Add default street map layer
-    baseLayers["Street Map"].addTo(map);
-
-    // Create an object to hold overlay layers
-    var overlays = {};
-
-    // Load the GeoJSON data for school districts
-    fetch('resources/Current_Districts_2023.geojson')
-        .then(response => response.json())
-        .then(districtsData => {
-            // Create a GeoJSON layer for school districts and add it to the map
-            overlays["School District Boundaries"] = L.geoJSON(districtsData, {
-                style: function(feature) {
-                    return {
-                        fillColor: 'transparent', // No fill color
-                        color: 'black', // Boundary color
-                        weight: 2, // Boundary weight
-                        opacity: 1 // Boundary opacity
-                    };
-                },
-                onEachFeature: function(feature, layer) {
-                    // Bind popup with district name and color to each district
-                    layer.bindPopup('<b>District Name: </b>' + feature.properties.NAME);
-                }
-            }).addTo(map);
-        })
-        .catch(error => console.error('Error loading district data:', error));
-
-    // Fetch financial and student count data
-    fetch('resources/finance_scores_coordinates.json')
-        .then(response => response.json())
-        .then(data => {
-            // Create a feature group for the markers
-            var markersGroup = L.featureGroup();
-
-            // Iterate through the data to create markers
-            data.forEach(school => {
-                var popupContent = `
-                    <div>
-                        <h3>${school.District_Name}</h3>
-                        <p>Total Operating Revenue: $${school.Total_Operating_Revenue.toLocaleString()}</p>
-                        <p>Student Count: ${school.Student_Count.toLocaleString()}</p>
-                        <p>Latitude: ${school.Latitude}</p>
-                        <p>Longitude: ${school.Longitude}</p>
-                    </div>
-                `;
-
-                L.circleMarker([school.Latitude, school.Longitude], {
-                    radius: getMarkerSize(school.Total_Operating_Revenue),
-                    fillColor: getMarkerColor(school.Student_Count),
-                    color: '#000',
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.7
-                }).bindPopup(popupContent).addTo(markersGroup);
-            });
-
-            // Add markers group to overlays
-            overlays["Financial Data"] = markersGroup;
-
-            // Add base layers and overlays to the map
-            L.control.layers(baseLayers, overlays).addTo(map);
-
-            // Add legend
-            var legend = L.control({position: 'bottomright'});
-
-            legend.onAdd = function (map) {
-                var div = L.DomUtil.create('div', 'legend');
-                div.innerHTML += '<div class="legend-title">Financial Data Legend</div>';
-                div.innerHTML += '<div class="legend-item">';
-                div.innerHTML += '<span class="legend-color" style="background: red;"></span> 6A: 2275 and above<br>';
-                div.innerHTML += '<span class="legend-color" style="background: purple;"></span> 5A: 1315 - 2274<br>';
-                div.innerHTML += '<span class="legend-color" style="background: blue;"></span> 4A: 545 - 1314<br>';
-                div.innerHTML += '<span class="legend-color" style="background: yellow;"></span> 3A: 254 - 544<br>';
-                div.innerHTML += '<span class="legend-color" style="background: orange;"></span> 2A: 105 - 253<br>';
-                div.innerHTML += '<span class="legend-color" style="background: green;"></span> 1A: Below 105<br>';
-                div.innerHTML += '</div>';
-                return div;
-            };
-
-            legend.addTo(map);
-        })
-        .catch(error => console.error('Error loading financial data:', error));
+  // Define a function to determine marker color based on student count
+  function getMarkerColor(studentCount) {
+    if (studentCount >= 2275) {
+      return 'red';
+    } else if (studentCount >= 1315) {
+      return 'purple';
+    } else if (studentCount >= 545) {
+      return 'blue';
+    } else if (studentCount >= 254) {
+      return 'yellow';
+    } else if (studentCount >= 105) {
+      return 'orange';
+    } else {
+      return 'green';
+    }
+  }
 </script>
 
 </body>
