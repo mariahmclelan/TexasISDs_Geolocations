@@ -50,37 +50,53 @@ We then proceeded to conduct a **statistical analysis** of the data.
 ### Statistical Analysis:
 #### Texas Total Operating Revenue Results:
 *Mean* Total Operating Revenue: 85,389,382
+
 *Median* Total Operating Revenue: 22,696,266
+
 *Standard Deviation*: 190,478,406
+
 *Standard Error of the Mean*: 7,049,922
+
 *Shapiro-Wilk Normality Test*:
 
 Test Statistic: 0.4248087406158447
 P-value: 4.7223758247746335e-43
 The data does not follow a normal distribution (reject the null hypothesis).
-The lower quartile of the total operating revenue is: 11395018.75
-The upper quartile of the total operating revenue is: 68576095.75
+
 The interquartile range of the total operating revenue is: 57181077.0
+
 The median of the total operating revenue is: 22696266.0 
+
 Values below -74376596.75 could be outliers.
+
 Values above 154347711.25 could be outliers.
 
 #### Texas Student Count Distribution Results:
 *Mean* Student Count: 6,908
+
 *Median* Student Count: 1,687
+
 *Standard Deviation*: 15,534
+
 *Standard Error of the Mean*: 575
+
 *Shapiro-Wilk Normality Test*:
+
 Test Statistic: 0.4364619851112366
+
 P-value: 9.388699710976274e-43
+
 The data does not follow a normal distribution (reject the null hypothesis).
-The lower quartile of the Student Count  is: 755.0
-The upper quartile of the Student Count is: 5286.5
+
 The interquartile range of the Student Count is: 4531.5
+
 The median of the Student Count is: 1687.0 
+
 Values below -6042.25 could be outliers.
+
 Values above 12083.75 could be outliers.
-At this point, we started the **visual analysis**:
+
+**visual analysis**:
 
 ### Visualization:
 Our first goal was to investigate if there is a correlation between total operating revenue and student count. 
