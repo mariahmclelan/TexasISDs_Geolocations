@@ -34,7 +34,7 @@ https://schools.texastribune.org/states/tx/
 ### How to interact with the project
 
 ### Ethical data considerations
-
+Before downloading or scraping the data, we went through the regulations and documents about the data usage. All the data we used for this project is ethically sourced.
 
 ### Takeaways and conclusions:
 
