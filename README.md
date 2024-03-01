@@ -30,14 +30,14 @@ https://tea.texas.gov/
 
 > https://tea.texas.gov/finance-and-grants/state-funding/state-funding-reports-and-data/peims-financial-standard-reports
 
-> https://schools.texastribune.org/states/tx/
+https://schools.texastribune.org/states/tx/
 
 ### Development
 Began our study by searching for suitable datasets, focusing on the Texas Education system and referring to the TEA Texas Education Agency website.
 We found six relevant Excel files, which we converted to .csv files. Also, we found Public Schools Explorer website, which we scraped data fpr all the districts
 
-Our first challenge was determining which columns to choose. 
-For the financial data, we focused solely on total operating revenue, which Texas uses to support educational operations and facility construction in public school districts. 
+Our first challenge was to clean the data frames. 
+We focused solely on total operating revenue, which Texas uses to support educational operations and facility construction in public school districts. 
 This revenue comes from local, state, and federal funding sources, with the majority coming from state and local sources and only a relatively small amount from the federal government.  
 
 State government aid is the primary funding source for elementary and secondary education, followed by local contributions (primarily property taxes). On average, 8% of revenues come from the federal government, 47% from the state, and 45% from local sources[^bignote2].
