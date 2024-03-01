@@ -71,30 +71,6 @@ Values below -74376596.75 could be outliers.
 
 Values above 154347711.25 could be outliers.
 
-#### Texas Student Count Distribution Results:
-*Mean* Student Count: 6,908
-
-*Median* Student Count: 1,687
-
-*Standard Deviation*: 15,534
-
-*Standard Error of the Mean*: 575
-
-*Shapiro-Wilk Normality Test*:
-
-Test Statistic: 0.4364619851112366
-
-P-value: 9.388699710976274e-43
-
-The data does not follow a normal distribution (reject the null hypothesis).
-
-The interquartile range of the Student Count is: 4531.5
-
-The median of the Student Count is: 1687.0 
-
-Values below -6042.25 could be outliers.
-
-Values above 12083.75 could be outliers.
 
 **visual analysis**:
 
