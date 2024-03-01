@@ -1,4 +1,4 @@
-# Project3
+# Project3 - Data Visualization Track
 ## Education Funding Analysis
 
 ### Team Members: 
@@ -44,84 +44,50 @@ State government aid is the primary funding source for elementary and secondary 
 [^bignote2]:  McFarland, J., Hussar, B., Wang, X., Zhang, J., Wang, K., Rathbun, A., … Bullock Mann, F. (2018). The condition of education 2018. National Center for Education Statistics.
 
 We selected "All Students" as the group for SAT and ACT scores, as other groups had inconsistent data. 
-
 Then, we merged the SAT and ACT scores with the cleaned finance data frame and formatted and sorted the values. 
-
 We then proceeded to conduct a **statistical analysis** of the data.
 
 ### Statistical Analysis:
-
 #### Texas Total Operating Revenue Results:
-
 *Mean* Total Operating Revenue: 85,389,382
-
 *Median* Total Operating Revenue: 22,696,266
-
 *Standard Deviation*: 190,478,406
-
 *Standard Error of the Mean*: 7,049,922
-
 *Shapiro-Wilk Normality Test*:
 
 Test Statistic: 0.4248087406158447
-
 P-value: 4.7223758247746335e-43
-
 The data does not follow a normal distribution (reject the null hypothesis).
-
 The lower quartile of the total operating revenue is: 11395018.75
-
 The upper quartile of the total operating revenue is: 68576095.75
-
 The interquartile range of the total operating revenue is: 57181077.0
-
 The median of the total operating revenue is: 22696266.0 
-
 Values below -74376596.75 could be outliers.
-
 Values above 154347711.25 could be outliers.
 
-
 #### Texas Student Count Distribution Results:
-
 *Mean* Student Count: 6,908
-
 *Median* Student Count: 1,687
-
 *Standard Deviation*: 15,534
-
 *Standard Error of the Mean*: 575
-
 *Shapiro-Wilk Normality Test*:
-
 Test Statistic: 0.4364619851112366
-
 P-value: 9.388699710976274e-43
-
 The data does not follow a normal distribution (reject the null hypothesis).
-
 The lower quartile of the Student Count  is: 755.0
-
 The upper quartile of the Student Count is: 5286.5
-
 The interquartile range of the Student Count is: 4531.5
-
 The median of the Student Count is: 1687.0 
-
 Values below -6042.25 could be outliers.
-
 Values above 12083.75 could be outliers.
-
 At this point, we started the **visual analysis**:
 
 ### Visualization:
-
 Our first goal was to investigate if there is a correlation between total operating revenue and student count. 
 
 >![tor vs students!](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/all%20budget%20vs%20student.jpeg)
 
 The scatter plot shows a positive correlation between total operating revenue and student count.
-
 Then, we analyzed a possible correlation between spending ranges (per student) and average SAT and ACT scores.
 
 ![>insert fig Spending Ranges (per student) vs. average total SAT score/ACT!](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/spendingvact.png)
@@ -129,11 +95,8 @@ Then, we analyzed a possible correlation between spending ranges (per student) a
 ![sat spending!](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/spendingvsat.png)
 
 The line plot suggests that the budget doesn't significantly affect scores, as some schools with smaller budgets scored the highest.
-
 Moreover, smaller schools tend to have higher ACT and SAT scores. 
-
 These findings indicate that other factors besides budget allocation may influence academic performance, and further research is needed to identify these factors.
-
 We then decided to examine whether there is a correlation between school size and performance in standardized tests.
 
 ![>insert fig. School Size vs. Average Total SAT ACT score !](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/sizevact.png)
@@ -141,9 +104,7 @@ We then decided to examine whether there is a correlation between school size an
 ![sat!](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/sizevsat.png)
 
 The data presented in the line graph indicates a substantial decline in academic scores when the school population increases.
-
 At this point, we decided to narrow down our investigation:
-
 We analyzed the five largest cities in Texas (by population): San Antonio, Austin, Fort Worth, Dallas, and Houston. 
 
 ![box plot kelsey!](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/ACT-SAT-Boxplots.png)
@@ -151,7 +112,6 @@ We analyzed the five largest cities in Texas (by population): San Antonio, Austi
 Specifically, we focused on their respective Independent School Districts (ISD) and created a box plot that compares the total operating revenue of each ISD with their SAT and ACT Composite scores and demonstrates the variability of test scores within districts with some of the highest student counts and budgets. 
 
 There is no better outcome in SAT and ACT tests as Total Operating Revenue increases. 
-
 In fact, Austin ISD performs the best in both SAT and ACT while having a smaller budget than Fort Worth, Dallas, and Houston. 
 
 We chose the five largest cities as these had plenty of schools reporting scores, allowing a coherent box plot graph (small districts with only one or two schools need to give more data to plot them in this manner). 
@@ -165,7 +125,6 @@ Using the same data, we created two scatterplots and two histograms:
 There is a negative correlation between Total Operating Revenue and ACT Composite and SAT Total scores, as indicated by the values of -0.03 and -0.09, respectively. 
 
 At this juncture, we determined that comparing a larger urban center and a smaller municipality was necessary to confirm our hypothesis. 
-
 To facilitate this assessment, we plan to implement `hvplot`, as data visualization tool.
 
 ![hisako act sat!](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/5%20SAT%20vs%20ACT.jpeg)
@@ -181,9 +140,7 @@ After collecting sufficient data on total operating revenue and SAT/ACT scores, 
 ![color-sorted histogram!](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/DropoutRateByStudentCount.png)
 
 The color-sorted histogram displays a relationship between the student counts of schools and the average dropout rates within those facets. 
-
 Each vertical bar is an increasing measure of 20 students. 
-
 At its lowest points, rates as low as 5 percent can be seen from the largest schools, while at its height, the schools with student populations between 60-80 and 300-320 peak at 48 and 56 percent.
 
 ![james fringe towns!](https://github.com/mariahmclelan/project1/blob/main/project_notebook/images/DropoutRateBySchoolType.png)
