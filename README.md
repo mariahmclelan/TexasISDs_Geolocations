@@ -1,9 +1,7 @@
 # Project3
-
 ## Education Funding Analysis
 
 ### Team Members: 
-
 - James Draper
 - Kelsey Kraft
 - Mariah McLelan
@@ -12,20 +10,14 @@
 
   
 ### Research Question to Answer:
-
 How does the funding allocated to education impact the success of students and schools?
 
 ### Project Description:
-
 The project aims to analyze the impact of education funding on the success of students and schools. 
-
 Specifically, the study will focus on the relationship between state funding in Texas education, SAT/ACT scores, and dropout rates. 
-
 Through statistical and visual analysis, we will determine whether higher funding leads to better outcomes or if there is a point where the impact of funding levels off.
 
-
 ### Data Sets Source:
-
 https://tea.texas.gov/
 
 > https://tea.texas.gov/reports-and-data/school-data/campus-and-district-type-data-search
@@ -38,15 +30,13 @@ https://tea.texas.gov/
 
 > https://tea.texas.gov/finance-and-grants/state-funding/state-funding-reports-and-data/peims-financial-standard-reports
 
+> https://schools.texastribune.org/states/tx/
 
 ### Development
-
-We began our study by searching for suitable datasets, focusing on the Texas Education system and referring to the TEA Texas Education Agency website.
-
-We found six relevant Excel files, which we converted to .csv files. 
+Began our study by searching for suitable datasets, focusing on the Texas Education system and referring to the TEA Texas Education Agency website.
+We found six relevant Excel files, which we converted to .csv files. Also, we found Public Schools Explorer website, which we scraped data fpr all the districts
 
 Our first challenge was determining which columns to choose. 
-
 For the financial data, we focused solely on total operating revenue, which Texas uses to support educational operations and facility construction in public school districts. 
 This revenue comes from local, state, and federal funding sources, with the majority coming from state and local sources and only a relatively small amount from the federal government.  
 
