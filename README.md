@@ -1,5 +1,4 @@
 # Project3
-# Project 1
 
 ## Education Funding Analysis
 
@@ -39,13 +38,6 @@ https://tea.texas.gov/
 
 > https://tea.texas.gov/finance-and-grants/state-funding/state-funding-reports-and-data/peims-financial-standard-reports
 
-### Break Down of Task:
-
-    Mariah: Visualization, Statistical Analysis, Cleaning Final Code.
-    James: Finding datasets, visualization.
-    Kelsey: Visualization.
-    Amarilli: Cleaning and merging datasets, README, presentation. 
-    Hisako: Visualization. 
 
 ### Development
 
