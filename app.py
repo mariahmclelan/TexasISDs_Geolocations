@@ -42,8 +42,12 @@ def home_page():
         f"Available Routes:<br/>"
         f"/texasSchoolsDB/scores_finances<br/>"
         f"/texasSchoolsDB/school_info<br/>"
-        f"/mongomaps"
-        # f"/texasSchoolsDB/current_districts_geojson"
+        f"/texasSchoolsDB/current_districts_geojson<br/>"
+        f"/texasSchoolsDB/scores_finances_coordinates<br/>"
+        f"/texasSchoolsDB/coordinates<br/>"
+        f"/texasSchoolsDB/schools_2022_to_2023_geojson<br/>"
+        f"/mongomaps<br/>"
+        f"/two_layers"
     )
 
 
@@ -89,9 +93,6 @@ def mongomaps():
     # Add layer control to the map
     folium.LayerControl().add_to(map)
 
-    # Convert the map to HTML
-    # map_html = map.get_root().render()
-
     # Render the HTML template with the map
     return render_template('map_with_markers_revenue_size_and_student_count_color_updated.html')
 
@@ -122,9 +123,27 @@ def current_districts_geojson():
         data.append(doc)
     return jsonify(data)
 
-@app.route("/amarilliMap")
-def mapFunc():
-    docs = mongo.db.current_districts_geojson.find({})
+@app.route("/texasSchoolsDB/scores_finances_coordinates")
+def scores_finances_coordinates():
+    docs = mongo.db.scores_finances_coordinates.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/texasSchoolsDB/coordinates")
+def coordinates():
+    docs = mongo.db.coordinates.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/texasSchoolsDB/schools_2022_to_2023_geojson")
+def schools_2022_to_2023_geojson():
+    docs = mongo.db.schools_2022_to_2023_geojson.find({})
     data = []
     for doc in docs:
         doc['_id'] = str(doc['_id'])
