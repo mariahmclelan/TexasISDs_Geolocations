@@ -39,7 +39,13 @@
 <body>
     
     
-<script type="text/javascript">
+<!-- <script type="text/javascript">
+    var map = L.map('map_a22e2ca54ec997e893868894aa446ce8').setView([51.505, -0.09], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
     var legend = L.control({position: 'bottomleft'});
 
     legend.onAdd = function (map) {
@@ -56,7 +62,7 @@
 
     legend.addTo(map);
 </script>
-    
+     -->
 <div class="folium-map" id="map_a22e2ca54ec997e893868894aa446ce8" >
     {{ map|safe }}
 </div>

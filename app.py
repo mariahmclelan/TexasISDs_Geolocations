@@ -46,6 +46,8 @@ def home_page():
         # f"/texasSchoolsDB/current_districts_geojson"
     )
 
+
+
 @app.route('/mongomaps')
 def mongomaps():
     # Access MongoDB collection
@@ -88,10 +90,10 @@ def mongomaps():
     folium.LayerControl().add_to(map)
 
     # Convert the map to HTML
-    map_html = map.get_root().render()
+    # map_html = map.get_root().render()
 
     # Render the HTML template with the map
-    return render_template('map_with_markers_revenue_size_and_student_count_color_updated.html', map=map_html)
+    return render_template('map_with_markers_revenue_size_and_student_count_color_updated.html')
 
 @app.route("/texasSchoolsDB/scores_finances")
 def scores_finances():
@@ -111,14 +113,27 @@ def school_info():
         data.append(doc)
     return jsonify(data)
 
-# @app.route("/texasSchoolsDB/current_districts_geojson")
-# def current_districts_geojson():
-#     docs = mongo.db.current_districts_geojson.find({})
-#     data = []
-#     for doc in docs:
-#         doc['_id'] = str(doc['_id'])
-#         data.append(doc)
-#     return jsonify(data)
+@app.route("/texasSchoolsDB/current_districts_geojson")
+def current_districts_geojson():
+    docs = mongo.db.current_districts_geojson.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/amarilliMap")
+def mapFunc():
+    docs = mongo.db.current_districts_geojson.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/two_layers")
+def two_layers():
+    return render_template('two_layers.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
