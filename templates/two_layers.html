@@ -14,8 +14,13 @@
 
 <div id="map"></div>
 
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
+<script>d3.json("http://127.0.0.1:5000/texasSchoolsDB/schools_2022_to_2023_geojson").then(res=>console.log(res))</script>
+<!-- <script>
+
+  var url = "http://127.0.0.1:5000/amarilliMap"
   var map = L.map('map').setView([31.9686, -99.9018], 6);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -28,8 +33,7 @@
   var financeLayer = L.layerGroup();
 
   // Load the GeoJSON data for districts and add it to the districts layer group
-  fetch('resources/Current_Districts_2023.geojson')
-    .then(response => response.json())
+  d3.json(url)
     .then(districtsData => {
       L.geoJSON(districtsData, {
         style: function(feature) {
@@ -47,59 +51,59 @@
     })
     .catch(error => console.error('Error loading districts data:', error));
 
-  // Load the GeoJSON data for schools and add it to the schools layer group
-  fetch('resources/Schools_2022_to_2023.geojson')
-    .then(response => response.json())
-    .then(schoolsData => {
-      L.geoJSON(schoolsData, {
-        pointToLayer: function (feature, latlng) {
-          return L.circleMarker(latlng, {
-            radius: 8,
-            fillColor: 'blue',
-            color: '#000',
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8
-          });
-        },
-        onEachFeature: function(feature, layer) {
-          layer.bindPopup('<b>District Name: </b>' + feature.properties.USER_District_Name + 
-                          '<br><b>School Name: </b>' + feature.properties.USER_School_Name + 
-                          '<br><b>Address: </b>' + feature.properties.USER_School_Site_Street_Address + 
-                          '<br><b>Grades: </b>' + feature.properties.USER_Grade_Range + 
-                          '<br><b>Student count: </b>' + feature.properties.USER_School_Enrollment_as_of_Oc);
-        }
-      }).addTo(schoolsLayer);
-    })
-    .catch(error => console.error('Error loading schools data:', error));
+  // // Load the GeoJSON data for schools and add it to the schools layer group
+  // fetch('resources/Schools_2022_to_2023.geojson')
+  //   .then(response => response.json())
+  //   .then(schoolsData => {
+  //     L.geoJSON(schoolsData, {
+  //       pointToLayer: function (feature, latlng) {
+  //         return L.circleMarker(latlng, {
+  //           radius: 8,
+  //           fillColor: 'blue',
+  //           color: '#000',
+  //           weight: 1,
+  //           opacity: 1,
+  //           fillOpacity: 0.8
+  //         });
+  //       },
+  //       onEachFeature: function(feature, layer) {
+  //         layer.bindPopup('<b>District Name: </b>' + feature.properties.USER_District_Name + 
+  //                         '<br><b>School Name: </b>' + feature.properties.USER_School_Name + 
+  //                         '<br><b>Address: </b>' + feature.properties.USER_School_Site_Street_Address + 
+  //                         '<br><b>Grades: </b>' + feature.properties.USER_Grade_Range + 
+  //                         '<br><b>Student count: </b>' + feature.properties.USER_School_Enrollment_as_of_Oc);
+  //       }
+  //     }).addTo(schoolsLayer);
+  //   })
+  //   .catch(error => console.error('Error loading schools data:', error));
 
-  // Load the financial data and add it to the finance layer group
-  fetch('resources/finance_coordinates.json')
-    .then(response => response.json())
-    .then(financeData => {
-      financeData.forEach(school => {
-        var size = getMarkerSize(school.Total_Operating_Revenue);
-        var color = getMarkerColor(school.Student_Count);
+  // // Load the financial data and add it to the finance layer group
+  // fetch('resources/finance_coordinates.json')
+  //   .then(response => response.json())
+  //   .then(financeData => {
+  //     financeData.forEach(school => {
+  //       var size = getMarkerSize(school.Total_Operating_Revenue);
+  //       var color = getMarkerColor(school.Student_Count);
 
-        var popupContent = `
-          <div>
-            <h3>${school.District_Name}</h3>
-            <p>Total Operating Revenue: $${school.Total_Operating_Revenue.toLocaleString()}</p>
-            <p>Student Count: ${school.Student_Count.toLocaleString()}</p>
-          </div>
-        `;
+  //       var popupContent = `
+  //         <div>
+  //           <h3>${school.District_Name}</h3>
+  //           <p>Total Operating Revenue: $${school.Total_Operating_Revenue.toLocaleString()}</p>
+  //           <p>Student Count: ${school.Student_Count.toLocaleString()}</p>
+  //         </div>
+  //       `;
 
-        L.circleMarker([school.Latitude, school.Longitude], {
-          radius: size,
-          fillColor: color,
-          color: '#000',
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 0.7
-        }).bindPopup(popupContent).addTo(financeLayer);
-      });
-    })
-    .catch(error => console.error('Error loading financial data:', error));
+  //       L.circleMarker([school.Latitude, school.Longitude], {
+  //         radius: size,
+  //         fillColor: color,
+  //         color: '#000',
+  //         weight: 1,
+  //         opacity: 1,
+  //         fillOpacity: 0.7
+  //       }).bindPopup(popupContent).addTo(financeLayer);
+  //     });
+  //   })
+  //   .catch(error => console.error('Error loading financial data:', error));
 
   // Add layers to the map and create layer controls
   var baseLayers = {
@@ -149,7 +153,7 @@
       return 'green';
     }
   }
-</script>
+</script> -->
 
 </body>
 </html>
