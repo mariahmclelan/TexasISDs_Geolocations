@@ -1,0 +1,26 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Flask App</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Texas ISDs</h1>
+    </header>
+    <div class="routes">
+        <h2>Available Routes:</h2>
+        <ul>
+            <li><a href="/texasSchoolsDB/scores_finances">Scores & Finances</a></li>
+            <li><a href="/texasSchoolsDB/school_info">School Info</a></li>
+            <li><a href="/texasSchoolsDB/current_districts_geojson">Current Districts GeoJSON</a></li>
+            <li><a href="/texasSchoolsDB/scores_finances_coordinates">Scores & Finances Coordinates</a></li>
+            <li><a href="/texasSchoolsDB/coordinates">Coordinates</a></li>
+            <li><a href="/texasSchoolsDB/schools_2022_to_2023_geojson">Schools 2022 to 2023 GeoJSON</a></li>
+            <li><a href="/mongomaps">MongoMaps</a></li>
+            <li><a href="/two_layers">Two Layers</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
