@@ -46,6 +46,7 @@ def home_page():
         f"/texasSchoolsDB/scores_finances_coordinates<br/>"
         f"/texasSchoolsDB/coordinates<br/>"
         f"/texasSchoolsDB/schools_2022_to_2023_geojson<br/>"
+        f"/texasSchoolsDB/demographics<br/>"
         f"/mongomaps<br/>"
         f"/two_layers"
     )
@@ -145,6 +146,15 @@ def coordinates():
 @app.route("/texasSchoolsDB/schools_2022_to_2023_geojson")
 def schools_2022_to_2023_geojson():
     docs = mongo.db.schools_2022_to_2023_geojson.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/texasSchoolsDB/demographics")
+def demographics():
+    docs = mongo.db.demographics.find({})
     data = []
     for doc in docs:
         doc['_id'] = str(doc['_id'])
