@@ -2,6 +2,10 @@ from flask import Flask, jsonify, abort, render_template, json
 from flask_pymongo import PyMongo
 from bson import ObjectId
 import folium
+from branca.colormap import linear
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
 
 app = Flask(__name__, static_url_path='/custom_static')
 app.config["MONGO_URI"] = "mongodb://localhost:27017/texasSchoolsDB"
@@ -42,26 +46,18 @@ def get_marker_color(student_count):
 def home_page():
     info = (
         f"Available Routes:<br/>"
-        f"/texasSchoolsDB/scores_finances<br/>"
         f"/texasSchoolsDB/school_info<br/>"
         f"/texasSchoolsDB/current_districts_geojson<br/>"
         f"/texasSchoolsDB/scores_finances_coordinates<br/>"
         f"/texasSchoolsDB/coordinates<br/>"
         f"/texasSchoolsDB/schools_2022_to_2023_geojson<br/>"
-        f"/mongomaps<br/>"
-        f"/two_layers"
+        f"/map"
+        f"/heatmap"
+        
     )
     return render_template('home.html', info=info)
 
 
-@app.route("/texasSchoolsDB/scores_finances")
-def scores_finances():
-    docs = mongo.db.scores_finances.find({})
-    data = []
-    for doc in docs:
-        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
-        data.append(doc)
-    return jsonify(data)
 @app.route("/texasSchoolsDB/school_info")
 def school_info():
     docs = mongo.db.school_info.find({})
@@ -98,8 +94,17 @@ def coordinates():
         data.append(doc)
     return jsonify(data)
 
-@app.route("/two_layers")
-def two_layers():
+@app.route("/texasSchoolsDB/demographics")
+def demographics():
+    docs = mongo.db.demographics.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/map")
+def map():
     # Retrieve GeoJSON data for district boundaries from MongoDB
     boundaries_cursor = mongo.db.current_districts_geojson.find({})
     districts_geojson = [
@@ -179,5 +184,32 @@ def two_layers():
 
     return render_template('two_layers.html') 
 
+
+@app.route("/heatmap")
+def heat_map():
+    scores = mongo.db.scores_finances_coordinates.find({}, {"SAT_Total": 1, "Latitude": 1, "Longitude": 1})
+    
+    # Retrieve data from MongoDB
+    heat_data = []
+    for document in scores:
+        latitude = float(document.get('Latitude'))
+        longitude = float(document.get('Longitude'))
+        weight = float(document.get('SAT_Total'))  # Use SAT_Total as weight
+        heat_data.append([latitude, longitude, weight])
+
+    # Create a map centered around Texas
+    map_sat_scores = folium.Map(location=[31.9686, -99.9018], zoom_start=6)
+
+    # Add heatmap layer with legend
+    folium.plugins.HeatMap(heat_data, gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}).add_to(map_sat_scores)
+
+    # Convert the map to HTML
+    map_html = map_sat_scores._repr_html_()
+
+    # Pass the map HTML to the template
+    return render_template('heat_map.html', map_html=map_html)
+
+if __name__ == "__main__":
+    app.run(debug=True)
 if __name__ == "__main__":
     app.run(debug=True)
