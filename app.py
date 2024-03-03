@@ -3,7 +3,7 @@ from flask_pymongo import PyMongo
 from bson import ObjectId
 import folium
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/custom_static')
 app.config["MONGO_URI"] = "mongodb://localhost:27017/texasSchoolsDB"
 mongo = PyMongo(app)
 
@@ -35,11 +35,12 @@ def get_marker_color(student_count):
         return 'orange'
     else:
         return 'green'
+    
 
 
 @app.route("/")
 def home_page():
-    return (
+    info = (
         f"Available Routes:<br/>"
         f"/texasSchoolsDB/scores_finances<br/>"
         f"/texasSchoolsDB/school_info<br/>"
@@ -50,7 +51,7 @@ def home_page():
         f"/mongomaps<br/>"
         f"/two_layers"
     )
-
+    return render_template('home.html', info=info)
 
 
 @app.route("/texasSchoolsDB/scores_finances")
@@ -176,9 +177,7 @@ def two_layers():
     # Save the map as HTML in templates folder
     m.save('templates/two_layers.html')
 
-    return render_template('two_layers.html')  # Render the map using the template
-
-
+    return render_template('two_layers.html') 
 
 if __name__ == "__main__":
     app.run(debug=True)
