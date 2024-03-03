@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort, render_template
+from flask import Flask, jsonify, abort, render_template, json
 from flask_pymongo import PyMongo
 from bson import ObjectId
 import folium
@@ -36,6 +36,7 @@ def get_marker_color(student_count):
     else:
         return 'green'
 
+
 @app.route("/")
 def home_page():
     return (
@@ -52,16 +53,95 @@ def home_page():
 
 
 
-@app.route('/mongomaps')
-def mongomaps():
-    # Access MongoDB collection
+@app.route("/texasSchoolsDB/scores_finances")
+def scores_finances():
+    docs = mongo.db.scores_finances.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
+        data.append(doc)
+    return jsonify(data)
+@app.route("/texasSchoolsDB/school_info")
+def school_info():
+    docs = mongo.db.school_info.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/texasSchoolsDB/current_districts_geojson")
+def current_districts_geojson():
+    docs = mongo.db.current_districts_geojson.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/texasSchoolsDB/scores_finances_coordinates")
+def scores_finances_coordinates():
+    docs = mongo.db.scores_finances_coordinates.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/texasSchoolsDB/coordinates")
+def coordinates():
+    docs = mongo.db.coordinates.find({})
+    data = []
+    for doc in docs:
+        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
+        data.append(doc)
+    return jsonify(data)
+
+@app.route("/two_layers")
+def two_layers():
+    # Retrieve GeoJSON data for district boundaries from MongoDB
+    boundaries_cursor = mongo.db.current_districts_geojson.find({})
+    districts_geojson = [
+        {
+            'type': 'Feature',
+            'geometry': {
+                'type': boundary['geometry']['type'],
+                'coordinates': boundary['geometry']['coordinates']
+            },
+            'properties': {
+                'name': boundary['properties']['NAME20']  # Use NAME20 for district name
+            }
+        }
+        for boundary in boundaries_cursor
+    ]
+
+    # Create a Folium map centered around Texas
+    m = folium.Map(location=[31.0, -100.0], zoom_start=6)  # Centered in Texas, adjust zoom as needed
+
+    # Create a feature group for district boundaries
+    district_group = folium.FeatureGroup(name='District Boundaries', control=True)
+
+    # Add district boundaries to the map
+    for district_geojson in districts_geojson:
+        district_name = district_geojson['properties']['name']
+        folium.GeoJson(
+            district_geojson,
+            style_function=lambda feature: {
+                'color': 'black',
+                'weight': 2,
+                'fillOpacity': 0,
+            },
+            tooltip=district_name  # Add tooltip with district name
+        ).add_to(district_group)
+
+    # Add district boundaries feature group to the map
+    district_group.add_to(m)
+
+    # Retrieve GeoJSON data for markers from MongoDB
     coordinates = mongo.db.coordinates
 
-    # Create a Folium map
-    map = folium.Map(location=[29.7604, -95.3698], zoom_start=6)
-
-    # Create a feature group for the markers
-    marker_group = folium.FeatureGroup(name='Markers')
+    # Create a feature group for financial data markers
+    marker_group = folium.FeatureGroup(name='Financial Data', control=True)
 
     # Fetch data from MongoDB and create markers
     for document in coordinates.find({}):
@@ -84,75 +164,21 @@ def mongomaps():
                                       popup=popup_text,
                                       clickable=True)
 
-        # Add marker to feature group
+        # Add marker to financial data feature group
         marker.add_to(marker_group)
 
-    # Add feature group to the map
-    marker_group.add_to(map)
+    # Add financial data feature group to the map
+    marker_group.add_to(m)
 
     # Add layer control to the map
-    folium.LayerControl().add_to(map)
+    folium.LayerControl().add_to(m)
 
-    # Render the HTML template with the map
-    return render_template('map_with_markers_revenue_size_and_student_count_color_updated.html')
+    # Save the map as HTML in templates folder
+    m.save('templates/two_layers.html')
 
-@app.route("/texasSchoolsDB/scores_finances")
-def scores_finances():
-    docs = mongo.db.scores_finances.find({})
-    data = []
-    for doc in docs:
-        doc['_id'] = str(doc['_id'])
-        data.append(doc)
-    return jsonify(data)
+    return render_template('two_layers.html')  # Render the map using the template
 
-@app.route("/texasSchoolsDB/school_info")
-def school_info():
-    docs = mongo.db.school_info.find({})
-    data = []
-    for doc in docs:
-        doc['_id'] = str(doc['_id'])
-        data.append(doc)
-    return jsonify(data)
 
-@app.route("/texasSchoolsDB/current_districts_geojson")
-def current_districts_geojson():
-    docs = mongo.db.current_districts_geojson.find({})
-    data = []
-    for doc in docs:
-        doc['_id'] = str(doc['_id'])
-        data.append(doc)
-    return jsonify(data)
-
-@app.route("/texasSchoolsDB/scores_finances_coordinates")
-def scores_finances_coordinates():
-    docs = mongo.db.scores_finances_coordinates.find({})
-    data = []
-    for doc in docs:
-        doc['_id'] = str(doc['_id'])
-        data.append(doc)
-    return jsonify(data)
-
-@app.route("/texasSchoolsDB/coordinates")
-def coordinates():
-    docs = mongo.db.coordinates.find({})
-    data = []
-    for doc in docs:
-        doc['_id'] = str(doc['_id'])
-        data.append(doc)
-    return jsonify(data)
-
-@app.route("/texasSchoolsDB/schools_2022_to_2023_geojson")
-def schools_2022_to_2023_geojson():
-    docs = mongo.db.schools_2022_to_2023_geojson.find({})
-    data = []
-    for doc in docs:
-        doc['_id'] = str(doc['_id'])
-        data.append(doc)
-    return jsonify(data)
-
-@app.route("/two_layers")
-def two_layers():
-    return render_template('two_layers.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
