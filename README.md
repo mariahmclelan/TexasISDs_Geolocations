@@ -54,7 +54,7 @@ Finally, we developed a Flask App with eight routes, which included access to th
 
 ![home](https://github.com/mariahmclelan/Project3/blob/main/Images/home.png)
 
-Both cartographic representations exhibit the Texas school districts for the academic year 2022/2023 can be accessed at [LINK]
+Both cartographic representations exhibit the Texas school districts for the academic year 2022/2023.
 
 The first map comprises a layer control that enables the district boundaries to be activated and deactivated. Furthermore, it comprises financial data obtained from our previous project, in particular:
 
