@@ -189,32 +189,81 @@ def map():
 
 @app.route("/heatmap")
 def heat_map():
+    # Initialize Folium map for demographics
+    map_combined = folium.Map(location=[29.7604, -95.3698], zoom_start=6)
+
     # Retrieve SAT scores data from MongoDB
     scores = mongo.db.scores_finances_coordinates.find({}, {"SAT_Total": 1, "Latitude": 1, "Longitude": 1})
-    
-    # Retrieve data from MongoDB
-    heat_data = []
+    demographics = mongo.db.demographics.find()
+
+    # Create a feature group for demographics
+    district_group = folium.FeatureGroup(name='Demographics', control=True)
+
+    # Add markers for each district for demographics
+    for document in demographics:
+        district_name = document.get('District_Name')
+        latitude_str = document.get('Latitude')
+        longitude_str = document.get('Longitude')
+        
+        # Skip if latitude or longitude is empty
+        if not latitude_str or not longitude_str:
+            continue
+        
+        # Convert latitude and longitude to float
+        try:
+            latitude = float(latitude_str)
+            longitude = float(longitude_str)
+        except ValueError:
+            # Skip if latitude or longitude cannot be converted to float
+            continue
+        
+        demographic_info = f"""
+            <b>District Name:</b> {district_name}<br>
+            <b>African American:</b> {document.get('%_African_American')}<br>
+            <b>American Indian:</b> {document.get('%_American_Indian')}<br>
+            <b>Asian:</b> {document.get('%_Asian')}<br>
+            <b>Hispanic:</b> {document.get('% Hispanic')}<br>
+            <b>Pacific Islander:</b> {document.get('%_Pacific_Islander')}<br>
+            <b>White:</b> {document.get('%_White')}<br>
+            <b>Two or More Races:</b> {document.get('%_Two_or_More_Races')}
+        """
+        # Create marker with popup for demographics
+        folium.Marker(
+            location=[latitude, longitude],
+            popup=folium.Popup(demographic_info, max_width=300)
+        ).add_to(district_group)
+
+    # Add demographics layer to the map
+    district_group.add_to(map_combined)
+
+    # Retrieve data from MongoDB collection for SAT scores
+    sat_scores = []
+    latitudes = []
+    longitudes = []
     for document in scores:
+        score = float(document.get('SAT_Total'))
         latitude = float(document.get('Latitude'))
         longitude = float(document.get('Longitude'))
-        weight = float(document.get('SAT_Total'))  # Use SAT_Total as weight
-        heat_data.append([latitude, longitude, weight])
+        sat_scores.append(score)
+        latitudes.append(latitude)
+        longitudes.append(longitude)
 
-    # Create a map centered around Texas
-    map_sat_scores = folium.Map(location=[31.9686, -99.9018], zoom_start=6)
+    # Create a colormap for the legend
+    colormap = linear.YlOrRd_09.scale(min(sat_scores), max(sat_scores))
+    colormap.caption = 'SAT Scores'
 
-    # Add heatmap layer with legend
-    heat_layer = folium.plugins.HeatMap(heat_data, gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'})
-    heat_layer.add_to(map_sat_scores)
+    # Add heatmap layer with legend for SAT scores
+    heat_data = list(zip(latitudes, longitudes, sat_scores))
+    folium.plugins.HeatMap(heat_data, gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}).add_to(map_combined)
 
-    # Add layer control for SAT Scores
-    folium.LayerControl().add_to(map_sat_scores)
+    # Create a layer control for switching between layers
+    folium.LayerControl().add_to(map_combined)
 
     # Convert the map to HTML
-    map_html = map_sat_scores._repr_html_()
+    map_html = map_combined._repr_html_()
 
     # Pass the map HTML to the template
-    return render_template('heat_map.html', map_html=map_html)
+    return render_template('map_combined.html', map_html=map_html)
 
 if __name__ == "__main__":
     app.run(debug=True)
