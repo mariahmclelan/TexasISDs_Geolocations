@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Education and Funding: a Visualization</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
  <style>
         .routes h1 {
             font-size: 2rem;
@@ -25,15 +25,13 @@
         <div class="routes">
             <h1 style="text-align: center;">Available Routes:</h1>
             <ul>
-                <li><a href="/texasSchoolsDB/scores_finances" class="route-link">Scores & Finances</a></li>
                 <li><a href="/texasSchoolsDB/school_info" class="route-link">School Info</a></li>
                 <li><a href="/texasSchoolsDB/current_districts_geojson" class="route-link">Current Districts GeoJSON</a></li>
                 <li><a href="/texasSchoolsDB/scores_finances_coordinates" class="route-link">Scores & Finances Coordinates</a></li>
                 <li><a href="/texasSchoolsDB/coordinates" class="route-link">Coordinates</a></li>
-                <li><a href="/texasSchoolsDB/schools_2022_to_2023_geojson" class="route-link">Schools 2022 to 2023 GeoJSON</a></li>
                 <li><a href="/texasSchoolsDB/demographics" class="route-link">Demographics</a></li>
-                <li><a href="/mongomaps" class="route-link">MongoMaps</a></li>
-                <li><a href="/two_layers" class="route-link">Two Layers</a></li>
+                <li><a href="/map" class="route-link">District Map</a></li>
+                <li><a href="/heatmap" class="route-link">Heat Map</a></li>
             </ul>
         </div>
     </div>
