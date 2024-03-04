@@ -9,12 +9,13 @@
 
   
 ### Project Overview:
+
 Question to answer: How does the funding allocated to education impact the success of students and schools?
 
-This is the second part of a team project about [Texas ISDs](https://github.com/mariahmclelan/TexasISDs).
-The project aims to analyze the impact of education funding on the success of students and schools. 
-Specifically, the study will focus on the relationship between state funding in Texas education, SAT/ACT scores, demographics, and dropout rates. 
-Through a custom MongoDB database and visual analysis, we will determine whether higher funding leads to better outcomes or if there is a point where the impact of funding levels off.
+This is the second part of our team project focused on [Texas ISDs](https://github.com/mariahmclelan/TexasISDs) where we study the impact of education funding on student success and school performance. 
+Our aim is to determine the relationship between Texas state funding for education, SAT scores, and demographics. 
+We will use a custom MongoDB database and visual analysis to investigate whether higher funding leads to better outcomes or if there is a point where the impact of funding levels off. 
+Additionally, we will analyze demographics and their possible impact.
 
 ### Data Sets Source:
 
@@ -28,7 +29,7 @@ Through a custom MongoDB database and visual analysis, we will determine whether
 
 [The Texas Tribune](https://schools.texastribune.org/states/tx/)
 
-We also used the cleaned dataset we created during the first part of our project [Score&Finance](https://github.com/mariahmclelan/Project3/blob/main/resources/scores_finances.json) 
+We also used the cleaned dataset we created during the first part of our project: [Score&Finance](https://github.com/mariahmclelan/Project3/blob/main/resources/scores_finances.json) 
 
 ### Break Down of Task:
 
@@ -44,20 +45,23 @@ Part of this project is about web scraping. Before downloading or scraping the d
 
 ### Development
 
-The goal of this project was to create maps about Education and Funding in Texas, so we began our research looking for GeoJSON datasets to include with [our previous dataset](https://github.com/mariahmclelan/Project3/blob/main/resources/scores_finances.json)
-One of our first tasks was to transform our cvs files into JSON format. Then we stored them in our MongoDB dataset that we named [texasSchoolsDB](https://github.com/mariahmclelan/Project3/blob/main/DB.ipynb) we created a collection for every dataset we had and later we imported the data and stored in our database. 
-At this point we created a Flask App with X available routes X dataset and two Maps. 
+As part of our project, we aimed to create maps about Education and Funding in Texas. To begin with, we conducted research to find GeoJSON datasets that could be included along with [our previous dataset](https://github.com/mariahmclelan/Project3/blob/main/resources/scores_finances.json). 
 
-Both maps are interactive and can be reached at [LINK]
+Our first task was to transform the CSV files into JSON format, which we then stored in our MongoDB dataset, named [texasSchoolsDB](https://github.com/mariahmclelan/Project3/blob/main/DB.ipynb). 
+We created a separate collection for each dataset and later imported the data and stored it in our database. 
 
-The first map displays all the Texas districts for the 2022/2023 year. With a layer control, the boundaries can be turned off and on. Also, on this map, we displayed the Financial Data we got from our previous project, in particular:
+Finally, we developed a Flask App with several routes, which included access to the datasets and two interactive maps. 
+
+Both cartographic representations exhibit the Texas school districts for the academic year 2022/2023 can be accessed at [LINK]
+
+The first map comprises a layer control that enables the district boundaries to be activated and deactivated. Furthermore, it comprises financial data obtained from our previous project, in particular:
 
 - The student count for each district,
 - The Total operation revenue for each district
 
-The markers are differentiated according to the schools' ranking, and their size mirrors the size of the student population.  
+The markers on the map are distinguished by the school's ranking, while their size reflects the student population.  
 
-The second map is a heat map of the SAT scores of every district in Texas, and the markers display the demographic of each district. 
+The second map is a heat map that illustrates the SAT scores of each district in Texas, and the markers exhibit the demographics of each district. 
 
 Regarding the demographics, we also created radar charts displaying the population of each district.
 
@@ -86,5 +90,5 @@ As per the American Federation of Teachers Texas, teachers must maintain an aver
 
 Further investigation may lead us to hypothesize that the optimal student-to-teacher ratio in smaller schools may be a factor that contributes to their superior academic performance when compared to larger schools with a lower percentage of teachers per student. 
 
-Our web scraping project is still in progress. We still have thousands of rows of data to clean and analyze and this query could already be the draft of our next project. 
+Our web scraping project is still ongoing, with thousands of data rows left to analyze and clean. This query may form the basis of our next project
 
