@@ -2,10 +2,12 @@ from flask import Flask, jsonify, abort, render_template, json
 from flask_pymongo import PyMongo
 from bson import ObjectId
 import folium
+from folium.plugins import MarkerCluster
 from branca.colormap import linear
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import os 
 
 app = Flask(__name__, static_url_path='/custom_static')
 app.config["MONGO_URI"] = "mongodb://localhost:27017/texasSchoolsDB"
@@ -187,6 +189,7 @@ def map():
 
 @app.route("/heatmap")
 def heat_map():
+    # Retrieve SAT scores data from MongoDB
     scores = mongo.db.scores_finances_coordinates.find({}, {"SAT_Total": 1, "Latitude": 1, "Longitude": 1})
     
     # Retrieve data from MongoDB
@@ -201,7 +204,11 @@ def heat_map():
     map_sat_scores = folium.Map(location=[31.9686, -99.9018], zoom_start=6)
 
     # Add heatmap layer with legend
-    folium.plugins.HeatMap(heat_data, gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}).add_to(map_sat_scores)
+    heat_layer = folium.plugins.HeatMap(heat_data, gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'})
+    heat_layer.add_to(map_sat_scores)
+
+    # Add layer control for SAT Scores
+    folium.LayerControl().add_to(map_sat_scores)
 
     # Convert the map to HTML
     map_html = map_sat_scores._repr_html_()
@@ -209,7 +216,5 @@ def heat_map():
     # Pass the map HTML to the template
     return render_template('heat_map.html', map_html=map_html)
 
-if __name__ == "__main__":
-    app.run(debug=True)
 if __name__ == "__main__":
     app.run(debug=True)
