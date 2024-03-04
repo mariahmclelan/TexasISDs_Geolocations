@@ -45,12 +45,14 @@ Part of this project is about web scraping. Before downloading or scraping the d
 
 ### Development
 
-As part of our project, we aimed to create maps about Education and Funding in Texas. To begin with, we conducted research to find GeoJSON datasets that could be included along with [our previous dataset](https://github.com/mariahmclelan/Project3/blob/main/resources/scores_finances.json). 
+As part of our project, we aimed to create maps about Education and Funding in Texas. To begin with, we researched to find GeoJSON datasets that could be included along with [our previous dataset](https://github.com/mariahmclelan/Project3/blob/main/resources/scores_finances.json). 
 
 Our first task was to transform the CSV files into JSON format, which we then stored in our MongoDB dataset, named [texasSchoolsDB](https://github.com/mariahmclelan/Project3/blob/main/DB.ipynb). 
-We created a separate collection for each dataset and later imported the data and stored it in our database. 
+We created a separate collection for each dataset, imported it, and stored it in our database. 
 
-Finally, we developed a Flask App with several routes, which included access to the datasets and two interactive maps. 
+Finally, we developed a Flask App with eight routes, which included access to the datasets and two interactive maps. 
+
+![home](https://github.com/mariahmclelan/Project3/blob/main/Images/home.png)
 
 Both cartographic representations exhibit the Texas school districts for the academic year 2022/2023 can be accessed at [LINK]
 
@@ -59,13 +61,13 @@ The first map comprises a layer control that enables the district boundaries to 
 - The student count for each district,
 - The Total operation revenue for each district
 
-The markers on the map are distinguished by the school's ranking, while their size reflects the student population.  
+The school's ranking distinguishes the markers on the map, while their size reflects the student population.  
 
 The second map is a heat map that illustrates the SAT scores of each district in Texas, and the markers exhibit the demographics of each district. 
 
 Regarding the demographics, we also created radar charts displaying the population of each district.
 
-![IMAGE]
+![radar](https://github.com/mariahmclelan/Project3/blob/main/Images/radar_chart.png)
 
 
 
@@ -90,5 +92,5 @@ As per the American Federation of Teachers Texas, teachers must maintain an aver
 
 Further investigation may lead us to hypothesize that the optimal student-to-teacher ratio in smaller schools may be a factor that contributes to their superior academic performance when compared to larger schools with a lower percentage of teachers per student. 
 
-Our web scraping project is still ongoing, with thousands of data rows left to analyze and clean. This query may form the basis of our next project
+Our web scraping project is ongoing, with thousands of data rows left to analyze and clean. This query may form the basis of our next project
 
